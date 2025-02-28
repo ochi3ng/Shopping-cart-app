@@ -2,10 +2,10 @@
 
 import { useCart } from "../context/CartContext";
 
-const USD_TO_KES = 10; // Approximate exchange rate
+const USD_TO_KES = 10;
 
 export default function CartPage() {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
 
   // Calculate total price in KES
   const totalPriceKES = cart.reduce((total, item) => total + item.price * item.quantity * USD_TO_KES, 0);
@@ -35,6 +35,23 @@ export default function CartPage() {
                       <p className="text-gray-800 font-semibold mt-1">
                         <span className="text-gray-600">Price:</span> KES {itemPriceKES} x {item.quantity}
                       </p>
+
+                      {/* Quantity Controls */}
+                      <div className="flex items-center mt-2 space-x-2">
+                        <button
+                          onClick={() => decreaseQuantity(item.id)}
+                          className="px-3 py-1 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
+                        >
+                          -
+                        </button>
+                        <span className="text-gray-800 font-semibold">{item.quantity}</span>
+                        <button
+                          onClick={() => increaseQuantity(item.id)}
+                          className="px-3 py-1 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <button

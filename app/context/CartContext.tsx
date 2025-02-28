@@ -12,16 +12,18 @@ type CartContextType = {
   addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
+  increaseQuantity: (id: number) => void;
+  decreaseQuantity: (id: number) => void;
 };
 
 // Create Cart Context
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// ✅ Export `CartProvider` (IMPORTANT)
+// ✅ Export `CartProvider`
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Add to Cart
+  // ✅ Add to Cart
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
@@ -34,16 +36,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Remove from Cart
+  // ✅ Remove from Cart
   const removeFromCart = (id: number) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  // Clear Cart
+  // ✅ Clear Cart
   const clearCart = () => setCart([]);
 
+  // ✅ Increase Quantity
+  const increaseQuantity = (id: number) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  // ✅ Decrease Quantity
+  const decreaseQuantity = (id: number) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity }}>
       {children}
     </CartContext.Provider>
   );
